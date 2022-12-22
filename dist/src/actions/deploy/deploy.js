@@ -86,7 +86,7 @@ var DeployClass = (function () {
                         return [2, true];
                     case 3:
                         e_1 = _a.sent();
-                        console.error('> Plugin "%s" does not have a "%s" file.' +
+                        console.error('> Plugin "%s" does not have a "%s" file. ' +
                             'Please run glue build and try again!', plugin.directory, filename);
                         process.exit(1);
                         return [3, 4];

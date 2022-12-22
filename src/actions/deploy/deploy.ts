@@ -54,7 +54,7 @@ export default class DeployClass {
       return true;
     } catch (e) {
       console.error(
-        '> Plugin "%s" does not have a "%s" file.' +
+        '> Plugin "%s" does not have a "%s" file. ' +
         'Please run glue build and try again!',
         plugin.directory,
         filename
