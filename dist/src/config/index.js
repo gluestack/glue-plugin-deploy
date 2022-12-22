@@ -1,6 +1,6 @@
 "use strict";
 exports.__esModule = true;
 exports.FS_SERVER = exports.GQL_SERVER = void 0;
-exports.GQL_SERVER = 'http://10.30.1.84:8080/v1/graphql';
-exports.FS_SERVER = 'http://10.30.1.84:9011';
+exports.GQL_SERVER = 'https://api.gluestack.io/hasura/v1/graphql';
+exports.FS_SERVER = 'https://api.gluestack.io/upload';
 //# sourceMappingURL=index.js.map
