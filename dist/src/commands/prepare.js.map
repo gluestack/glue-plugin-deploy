@@ -1,0 +1,1 @@
+{"version":3,"file":"prepare.js","sourceRoot":"","sources":["../../../src/commands/prepare.ts"],"names":[],"mappings":";;;AAAA,8CAAmD;AAEnD,SAAgB,OAAO,CAAC,OAAY;IAClC,IAAM,OAAO,GAAG,OAAO;SACpB,OAAO,CAAC,SAAS,CAAC;SAClB,WAAW,CAAC,2EAA2E,CAAC;SACxF,MAAM,CAAC,uBAAa,CAAC,CAAC;AAC3B,CAAC;AALD,0BAKC"}
