@@ -1,6 +1,6 @@
 {
   "name": "@gluestack/glue-plugin-deploy",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Create an Application using GlueStack framework",
   "repository": {
     "type": "git",
@@ -13,6 +13,7 @@
   "author": "Shivam Singhal",
   "license": "ISC",
   "dependencies": {
+    "@gluestack/framework": "^0.0.14",
     "@types/node": "^18.11.17",
     "graphql-request": "^5.1.0"
   },
