@@ -52,12 +52,21 @@ export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
   }
 
   async runPostInstall(instanceName: string, target: string) {
-    await this.app.createPluginInstance(
-      this,
-      instanceName,
-      this.getTemplateFolderPath(),
-      this.getInstallationPath(target),
+    const deployPlugin: GlueStackPlugin = this.app.getPluginByName(
+      "@gluestack/glue-plugin-deploy",
     );
+    //Validation
+    if (
+      deployPlugin &&
+      deployPlugin.getInstances() &&
+      deployPlugin.getInstances()[0]
+    ) {
+      throw new Error(
+        `Deploy instance already installed as ${deployPlugin
+          .getInstances()[0]
+          .getName()}`,
+      );
+    }
   }
 
   createInstance(
