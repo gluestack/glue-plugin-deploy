@@ -45,7 +45,6 @@ var client_1 = require("../../client");
 var projects = function (teamId, token) { return __awaiter(void 0, void 0, void 0, function () {
     var query, variables, requestHeaders;
     return __generator(this, function (_a) {
-        console.log('Project', teamId);
         query = (0, client_1.gql)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    query projects ($teamId: Int!) {\n      projects(where: {team_id: {_eq: $teamId}}) {\n        project_hash\n        name\n      }\n    }\n  "], ["\n    query projects ($teamId: Int!) {\n      projects(where: {team_id: {_eq: $teamId}}) {\n        project_hash\n        name\n      }\n    }\n  "])));
         variables = {
             teamId: teamId

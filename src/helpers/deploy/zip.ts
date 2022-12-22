@@ -28,7 +28,7 @@ export const zip = async (project_path: string) => {
   });
 
   // good practice to catch this error explicitly
-  archive.on('error', function(err) {
+  archive.on('error', function(err: any) {
     throw err;
   });
 
