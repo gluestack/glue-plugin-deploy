@@ -2,12 +2,13 @@
 exports.__esModule = true;
 exports.PluginInstance = void 0;
 var PluginInstance = (function () {
-    function PluginInstance(app, callerPlugin, name, gluePluginStore) {
+    function PluginInstance(app, callerPlugin, name, gluePluginStore, installationPath) {
         this.isOfTypeInstance = true;
         this.app = app;
         this.name = name;
         this.callerPlugin = callerPlugin;
         this.gluePluginStore = gluePluginStore;
+        this.installationPath = installationPath;
     }
     PluginInstance.prototype.init = function () {
     };
@@ -18,6 +19,9 @@ var PluginInstance = (function () {
     };
     PluginInstance.prototype.getCallerPlugin = function () {
         return this.callerPlugin;
+    };
+    PluginInstance.prototype.getInstallationPath = function () {
+        return this.installationPath;
     };
     return PluginInstance;
 }());

@@ -45,6 +45,7 @@ var PluginInstance_1 = require("./PluginInstance");
 var commands_1 = require("./commands");
 var GlueStackPlugin = (function () {
     function GlueStackPlugin(app, gluePluginStore) {
+        this.type = "stateless";
         this.app = app;
         this.instances = [];
         this.gluePluginStore = gluePluginStore;
@@ -58,8 +59,14 @@ var GlueStackPlugin = (function () {
     GlueStackPlugin.prototype.getName = function () {
         return package_json_1["default"].name;
     };
+    GlueStackPlugin.prototype.getType = function () {
+        return this.type;
+    };
     GlueStackPlugin.prototype.getVersion = function () {
         return package_json_1["default"].version;
+    };
+    GlueStackPlugin.prototype.getInstallationPath = function (target) {
+        return "";
     };
     GlueStackPlugin.prototype.getTemplateFolderPath = function () {
         return "".concat(process.cwd(), "/node_modules/").concat(this.getName(), "/template");
@@ -68,14 +75,16 @@ var GlueStackPlugin = (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.app.createPluginInstance(this, instanceName, this.getTemplateFolderPath(), target)];
-                    case 1: return [2, _a.sent()];
+                    case 0: return [4, this.app.createPluginInstance(this, instanceName, this.getTemplateFolderPath(), this.getInstallationPath(target))];
+                    case 1:
+                        _a.sent();
+                        return [2];
                 }
             });
         });
     };
-    GlueStackPlugin.prototype.createInstance = function (key, gluePluginStore) {
-        var instance = new PluginInstance_1.PluginInstance(this.app, this, key, gluePluginStore);
+    GlueStackPlugin.prototype.createInstance = function (key, gluePluginStore, installationPath) {
+        var instance = new PluginInstance_1.PluginInstance(this.app, this, key, gluePluginStore, installationPath);
         this.instances.push(instance);
         return instance;
     };

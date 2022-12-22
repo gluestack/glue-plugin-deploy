@@ -1,21 +1,20 @@
 //@ts-ignore
-import packageJSON from '../package.json';
-import { PluginInstance } from './PluginInstance';
-import IApp from '@gluestack/framework/types/app/interface/IApp';
-import IPlugin from '@gluestack/framework/types/plugin/interface/IPlugin';
-import IInstance from '@gluestack/framework/types/plugin/interface/IInstance';
-import ILifeCycle from '@gluestack/framework/types/plugin/interface/ILifeCycle';
-import IGlueStorePlugin from '@gluestack/framework/types/store/interface/IGluePluginStore';
-import IManagesInstances from '@gluestack/framework/types/plugin/interface/IManagesInstances';
+import packageJSON from "../package.json";
+import { PluginInstance } from "./PluginInstance";
+import IApp from "@gluestack/framework/types/app/interface/IApp";
+import IPlugin from "@gluestack/framework/types/plugin/interface/IPlugin";
+import IInstance from "@gluestack/framework/types/plugin/interface/IInstance";
+import ILifeCycle from "@gluestack/framework/types/plugin/interface/ILifeCycle";
+import IGlueStorePlugin from "@gluestack/framework/types/store/interface/IGluePluginStore";
+import IManagesInstances from "@gluestack/framework/types/plugin/interface/IManagesInstances";
 
-import {
-	deploy as deployCommand
-} from './commands';
+import { deploy as deployCommand } from "./commands";
 
 //Do not edit the name of this class
 export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
   app: IApp;
   instances: IInstance[];
+  type: "stateless" | "stateful" | "devonly" = "stateless";
   gluePluginStore: IGlueStorePlugin;
 
   constructor(app: IApp, gluePluginStore: IGlueStorePlugin) {
@@ -25,7 +24,7 @@ export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
   }
 
   init() {
-		this.app.addCommand((program: any) => deployCommand(program, this));
+    this.app.addCommand((program: any) => deployCommand(program, this));
   }
 
   destroy() {
@@ -36,8 +35,16 @@ export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
     return packageJSON.name;
   }
 
+  getType(): "stateless" | "stateful" | "devonly" {
+    return this.type;
+  }
+
   getVersion(): string {
     return packageJSON.version;
+  }
+
+  getInstallationPath(target: string): string {
+    return "";
   }
 
   getTemplateFolderPath(): string {
@@ -45,16 +52,26 @@ export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
   }
 
   async runPostInstall(instanceName: string, target: string) {
-    return await this.app.createPluginInstance(
+    await this.app.createPluginInstance(
       this,
       instanceName,
       this.getTemplateFolderPath(),
-      target,
+      this.getInstallationPath(target),
     );
   }
 
-  createInstance(key: string, gluePluginStore: IGlueStorePlugin): IInstance {
-    const instance = new PluginInstance(this.app, this, key, gluePluginStore);
+  createInstance(
+    key: string,
+    gluePluginStore: IGlueStorePlugin,
+    installationPath: string,
+  ): IInstance {
+    const instance = new PluginInstance(
+      this.app,
+      this,
+      key,
+      gluePluginStore,
+      installationPath,
+    );
     this.instances.push(instance);
     return instance;
   }

@@ -10,17 +10,20 @@ export class PluginInstance implements IInstance, ILifeCycle {
   callerPlugin: IPlugin;
   isOfTypeInstance: boolean = true;
   gluePluginStore: IGlueStorePlugin;
+  installationPath: string;
 
   constructor(
     app: IApp,
     callerPlugin: IPlugin,
     name: string,
     gluePluginStore: IGlueStorePlugin,
+    installationPath: string,
   ) {
     this.app = app;
     this.name = name;
     this.callerPlugin = callerPlugin;
     this.gluePluginStore = gluePluginStore;
+    this.installationPath = installationPath;
   }
 
   init() {
@@ -37,5 +40,9 @@ export class PluginInstance implements IInstance, ILifeCycle {
 
   getCallerPlugin(): IPlugin {
     return this.callerPlugin;
+  }
+
+  getInstallationPath(): string {
+    return this.installationPath;
   }
 }
