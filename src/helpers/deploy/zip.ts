@@ -1,11 +1,17 @@
 import { join } from 'path';
 import archiver from 'archiver';
-import { createWriteStream } from 'fs';
+import { createWriteStream, mkdirSync } from 'fs';
 import { formatBytes } from '../format-bytes';
+import { fileExists } from '../file-exists';
 
 export const zip = async (project_path: string) => {
   const filename = 'output.zip';
-  const zipPath = join(project_path, filename);
+  const directory = join(project_path, '.deploy');
+
+  const zipPath = join(directory, filename);
+  if (!await fileExists(directory)) {
+    mkdirSync(directory, { recursive: true });
+  }
 
   const promise = new Promise((resolve, reject) => {
     // create a file to stream archive data to.

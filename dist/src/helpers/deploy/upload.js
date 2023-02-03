@@ -44,14 +44,13 @@ var glue_server_sdk_js_1 = require("@gluestack/glue-server-sdk-js");
 var create_deployment_1 = require("../apis/handlers/gql/create-deployment");
 var inquirer = require('inquirer');
 var upload = function (filepath, glueStackPlugin) { return __awaiter(void 0, void 0, void 0, function () {
-    var projectHash, team, user, tmp, choices, results, glue, response, error_1, fileID, user_1, response, _a, deployment_id, project_hash, error_2;
+    var projectHash, team, tmp, choices, results, glue, response, error_1, user, team, fileID, projectHash_1, response, _a, deployment_id, project_hash, error_2;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 projectHash = glueStackPlugin.gluePluginStore.get('project_hash');
+                if (!(!projectHash || projectHash === 'new')) return [3, 3];
                 team = glueStackPlugin.gluePluginStore.get('team');
-                user = glueStackPlugin.gluePluginStore.get('user');
-                if (!!projectHash) return [3, 3];
                 return [4, (0, gql_1.projects)(team.id, team.token)];
             case 1:
                 tmp = _b.sent();
@@ -100,9 +99,11 @@ var upload = function (filepath, glueStackPlugin) { return __awaiter(void 0, voi
                 _b.label = 8;
             case 8:
                 _b.trys.push([8, 10, , 11]);
+                user = glueStackPlugin.gluePluginStore.get('user');
+                team = glueStackPlugin.gluePluginStore.get('team');
                 fileID = glueStackPlugin.gluePluginStore.get('file_id');
-                user_1 = glueStackPlugin.gluePluginStore.get('user');
-                return [4, (0, create_deployment_1.createDeployment)('', team.id, user_1.access_token, fileID)];
+                projectHash_1 = glueStackPlugin.gluePluginStore.get('project_hash');
+                return [4, (0, create_deployment_1.createDeployment)(projectHash_1 === 'new' ? '' : projectHash_1, team.id, user.access_token, fileID)];
             case 9:
                 response = _b.sent();
                 if (response && response.createdbdeployment && response.createdbdeployment.data) {
@@ -116,7 +117,9 @@ var upload = function (filepath, glueStackPlugin) { return __awaiter(void 0, voi
                 error_2 = _b.sent();
                 console.log('> Uploading failed due to following reason:', error_2.response.errors || error_2);
                 return [3, 11];
-            case 11: return [2];
+            case 11:
+                (0, fs_1.unlinkSync)(filepath);
+                return [2];
         }
     });
 }); };

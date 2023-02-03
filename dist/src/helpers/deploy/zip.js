@@ -44,13 +44,20 @@ var path_1 = require("path");
 var archiver_1 = __importDefault(require("archiver"));
 var fs_1 = require("fs");
 var format_bytes_1 = require("../format-bytes");
+var file_exists_1 = require("../file-exists");
 var zip = function (project_path) { return __awaiter(void 0, void 0, void 0, function () {
-    var filename, zipPath, promise;
+    var filename, directory, zipPath, promise;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 filename = 'output.zip';
-                zipPath = (0, path_1.join)(project_path, filename);
+                directory = (0, path_1.join)(project_path, '.deploy');
+                zipPath = (0, path_1.join)(directory, filename);
+                return [4, (0, file_exists_1.fileExists)(directory)];
+            case 1:
+                if (!(_a.sent())) {
+                    (0, fs_1.mkdirSync)(directory, { recursive: true });
+                }
                 promise = new Promise(function (resolve, reject) {
                     var output = (0, fs_1.createWriteStream)(zipPath);
                     var archive = (0, archiver_1["default"])('zip', {
@@ -99,7 +106,7 @@ var zip = function (project_path) { return __awaiter(void 0, void 0, void 0, fun
                     archive.finalize();
                 });
                 return [4, Promise.all([promise])];
-            case 1:
+            case 2:
                 _a.sent();
                 return [2, { zipPath: zipPath }];
         }

@@ -1,4 +1,4 @@
-import { createReadStream } from 'fs';
+import { createReadStream, unlinkSync } from 'fs';
 import { GlueStackPlugin } from 'src';
 import { SEAL_DOMAIN } from '../../config';
 import { projects } from '../apis/handlers/gql';
@@ -12,11 +12,10 @@ export const upload = async (
   glueStackPlugin: GlueStackPlugin
 ) => {
   let projectHash = glueStackPlugin.gluePluginStore.get('project_hash');
-  const team = glueStackPlugin.gluePluginStore.get('team');
-  const user = glueStackPlugin.gluePluginStore.get('user');
 
   // prompts to collect Project ID from user
-  if (!projectHash) {
+  if (!projectHash || projectHash === 'new') {
+    const team = glueStackPlugin.gluePluginStore.get('team');
     const tmp = await projects(team.id, team.token);
 
     // transform key-value pairs
@@ -69,9 +68,17 @@ export const upload = async (
   // submits the deployment
   console.log('> Submitting the deployment now...');
   try {
+    const user = glueStackPlugin.gluePluginStore.get('user');
+    const team = glueStackPlugin.gluePluginStore.get('team');
     const fileID = glueStackPlugin.gluePluginStore.get('file_id');
-    const user = glueStackPlugin.gluePluginStore.get('user')
-    const response = await createDeployment('', team.id, user.access_token, fileID);
+    const projectHash = glueStackPlugin.gluePluginStore.get('project_hash');
+
+    const response = await createDeployment(
+      projectHash === 'new' ? '' : projectHash,
+      team.id,
+      user.access_token,
+      fileID
+    );
 
     if (response && response.createdbdeployment && response.createdbdeployment.data) {
       const { deployment_id, project_hash } = response.createdbdeployment.data;
@@ -84,5 +91,7 @@ export const upload = async (
   } catch (error) {
     console.log('> Uploading failed due to following reason:', error.response.errors || error);
   }
+
+  unlinkSync(filepath);
 };
 

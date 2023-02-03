@@ -1,11 +1,7 @@
-// npm dependencies
-import { join } from 'path';
-import { access, constants } from 'node:fs/promises';
 
-// local dependencies
 import { GlueStackPlugin } from 'src';
 import { auth, upload, zip } from '../../helpers/deploy';
-import { IPluginObject, IPluginCollection } from 'src/interfaces';
+import { IPluginCollection } from 'src/interfaces';
 import IInstance from '@gluestack/framework/types/plugin/interface/IInstance';
 import IHasContainerController from '@gluestack/framework/types/plugin/interface/IHasContainerController';
 
