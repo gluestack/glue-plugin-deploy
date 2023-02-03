@@ -7,50 +7,77 @@ export const zip = async (project_path: string) => {
   const filename = 'output.zip';
   const zipPath = join(project_path, filename);
 
-  // create a file to stream archive data to.
-  const output = createWriteStream(zipPath);
+  const promise = new Promise((resolve, reject) => {
+    // create a file to stream archive data to.
+    const output = createWriteStream(zipPath);
 
-  const archive = archiver('zip', {
-    zlib: { level: 9 } // Sets the compression level.
+    const archive = archiver('zip', {
+      zlib: { level: 9 } // Sets the compression level.
+    });
+
+    // listen for all archive data to be written
+    // 'close' event is fired only when a file descriptor is involved
+    output.on('close', () => {
+      process.stdout.clearLine(0);
+      process.stdout.cursorTo(0);
+      process.stdout.write(`> Compressed ${formatBytes(archive.pointer())} into "${filename}"!`);
+      console.log();
+      resolve(zipPath);
+    });
+
+    archive.on('progress', (progress) => {
+      process.stdout.clearLine(0);
+      process.stdout.cursorTo(0);
+      process.stdout.write(`> In progress: processed ${progress.entries.processed} files & ${formatBytes(progress.fs.processedBytes)} of data`);
+    });
+
+    // good practice to catch warnings (ie stat failures and other non-blocking errors)
+    archive.on('warning', (err) => {
+      console.log('> Warning:', err);
+      if (err.code === 'ENOENT') {
+        // log warning
+      } else {
+        // throw error
+        throw err;
+      }
+    });
+
+    // This event is fired when the data source is drained no matter what was the data source.
+    // It is not part of this library but rather from the NodeJS Stream API.
+    // @see: https://nodejs.org/api/stream.html#stream_event_end
+    output.on('end', () => {
+      console.log('Data has been drained');
+    });
+
+    // good practice to catch this error explicitly
+    archive.on('error', (err: any) => {
+      reject(err);
+    });
+
+    // pipe archive data to the file
+    archive.pipe(output);
+
+    // append files from a glob pattern
+    archive.glob('**', {
+      ignore: [
+        '**/storage/**/data/**',
+        '**/databases/**/db/**',
+        'node_modules/*',
+        '**/node_modules/**',
+        '**/.DS_Store',
+        '.git/**',
+        '*.zip'
+      ],
+      cwd: project_path,
+      dot: true
+    });
+
+    // finalize the archive (ie we are done appending files but streams have to finish yet)
+    // 'close', 'end' or 'finish' may be fired right after calling this method so register to them beforehand
+    archive.finalize();
   });
 
-  // listen for all archive data to be written
-  // 'close' event is fired only when a file descriptor is involved
-  output.on('close', function() {
-    console.log('> Compressed %s into "%s"!', formatBytes(archive.pointer()), filename);
-  });
+  await Promise.all([promise]);
 
-  // This event is fired when the data source is drained no matter what was the data source.
-  // It is not part of this library but rather from the NodeJS Stream API.
-  // @see: https://nodejs.org/api/stream.html#stream_event_end
-  output.on('end', function() {
-    console.log('Data has been drained');
-  });
-
-  // good practice to catch this error explicitly
-  archive.on('error', function(err: any) {
-    throw err;
-  });
-
-  // pipe archive data to the file
-  archive.pipe(output);
-
-  // append files from a glob pattern
-  archive.glob('**/*', {
-    ignore: [
-      '**/node_modules/**'     // Ingoring node_modules
-    ]
-  });
-
-  // finalize the archive (ie we are done appending files but streams have to finish yet)
-  // 'close', 'end' or 'finish' may be fired right after calling this method so register to them beforehand
-  archive.finalize();
-
-  // create a promise that resolves when the 'close' event is emitted
-  const createZipPromise = new Promise((resolve, reject) => {
-    output.on('close', resolve);
-    output.on('error', reject);
-  });
-
-  return { createZipPromise, zipPath };
+  return { zipPath };
 };

@@ -1,9 +1,9 @@
 /**
- * GQL server details
+ * SEAL server details
  */
-export const GQL_SERVER: string = 'https://api.gluestack.io/hasura/v1/graphql';
+export const SEAL_DOMAIN: string = 'https://api.gluestack.io';
 
 /**
- * Minio server details
+ * SEAL GQL service details
  */
-export const FS_SERVER: string = 'https://api.gluestack.io/upload';
+export const SEAL_GQL: string = 'https://api.gluestack.io/backend/graphql';

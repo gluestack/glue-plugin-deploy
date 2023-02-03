@@ -15,5 +15,4 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 exports.__esModule = true;
 __exportStar(require("./upload-zip"), exports);
-__exportStar(require("./download-zip"), exports);
 //# sourceMappingURL=index.js.map

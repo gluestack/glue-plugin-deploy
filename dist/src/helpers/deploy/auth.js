@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -38,9 +49,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.auth = void 0;
 var inquirer = require('inquirer');
-var gql_1 = require("../apis/handlers/gql");
-var auth = function (glueStackPlugin) { return __awaiter(void 0, void 0, void 0, function () {
-    var creds, results, response;
+var config_1 = require("../../config");
+var glue_server_sdk_js_1 = require("@gluestack/glue-server-sdk-js");
+var auth = function (doAuth, glueStackPlugin) { return __awaiter(void 0, void 0, void 0, function () {
+    var creds, results, glue, response;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -48,7 +60,7 @@ var auth = function (glueStackPlugin) { return __awaiter(void 0, void 0, void 0,
                     email: glueStackPlugin.gluePluginStore.get('email'),
                     password: glueStackPlugin.gluePluginStore.get('password')
                 };
-                if (!(!creds.email || !creds.password)) return [3, 2];
+                if (!(doAuth || !creds.email || !creds.password)) return [3, 2];
                 return [4, inquirer.prompt([{
                             name: 'email',
                             message: 'Please enter your email',
@@ -65,16 +77,18 @@ var auth = function (glueStackPlugin) { return __awaiter(void 0, void 0, void 0,
                 glueStackPlugin.gluePluginStore.set('email', results.email);
                 glueStackPlugin.gluePluginStore.set('password', results.password);
                 _a.label = 2;
-            case 2: return [4, (0, gql_1.signInUser)(creds)];
+            case 2:
+                glue = new glue_server_sdk_js_1.Glue(config_1.SEAL_DOMAIN);
+                return [4, glue.auth.login(__assign(__assign({}, creds), { role: "owner" }))];
             case 3:
                 response = _a.sent();
-                if (!response || !response.signInUser || !response.signInUser.data) {
-                    console.log('Authentication failed. Please check your credentials and try again.');
-                    process.exit(1);
+                if (!response || !response.id) {
+                    console.log("> Authentication failed. Message: ".concat(response));
+                    process.exit(-1);
                 }
-                glueStackPlugin.gluePluginStore.set('team', response.signInUser.data.team);
-                delete response.signInUser.data.team;
-                glueStackPlugin.gluePluginStore.set('user', response.signInUser.data);
+                glueStackPlugin.gluePluginStore.set('team', response.team);
+                delete response.team;
+                glueStackPlugin.gluePluginStore.set('user', response);
                 return [2];
         }
     });

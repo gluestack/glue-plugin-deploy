@@ -36,8 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var path_1 = require("path");
-var promises_1 = require("node:fs/promises");
 var deploy_1 = require("../../helpers/deploy");
 var DeployClass = (function () {
     function DeployClass(glueStackPlugin) {
@@ -68,54 +66,27 @@ var DeployClass = (function () {
             });
         });
     };
-    DeployClass.prototype.verifyPlugin = function (plugin, filename) {
-        if (filename === void 0) { filename = 'Dockerfile'; }
-        return __awaiter(this, void 0, void 0, function () {
-            var cwd, pluginPath, e_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        cwd = this.cwd;
-                        pluginPath = (0, path_1.join)(cwd, plugin.directory);
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4, (0, promises_1.access)((0, path_1.join)(pluginPath, filename), promises_1.constants.R_OK)];
-                    case 2:
-                        _a.sent();
-                        return [2, true];
-                    case 3:
-                        e_1 = _a.sent();
-                        console.error('> Plugin "%s" does not have a "%s" file. ' +
-                            'Please run glue build and try again!', plugin.directory, filename);
-                        process.exit(1);
-                        return [3, 4];
-                    case 4: return [2];
-                }
-            });
-        });
-    };
     DeployClass.prototype.createZip = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var cwd, _a, createZipPromise, zipPath;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var cwd, zipPath;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         cwd = this.cwd;
                         return [4, (0, deploy_1.zip)(cwd)];
                     case 1:
-                        _a = _b.sent(), createZipPromise = _a.createZipPromise, zipPath = _a.zipPath;
+                        zipPath = (_a.sent()).zipPath;
                         this.zipPath = zipPath;
-                        return [2, createZipPromise];
+                        return [2, Promise.resolve(zipPath)];
                 }
             });
         });
     };
-    DeployClass.prototype.auth = function () {
+    DeployClass.prototype.auth = function (doAuth) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, (0, deploy_1.auth)(this.glueStackPlugin)];
+                    case 0: return [4, (0, deploy_1.auth)(doAuth, this.glueStackPlugin)];
                     case 1:
                         _a.sent();
                         return [2];

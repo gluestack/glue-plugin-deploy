@@ -45,35 +45,64 @@ var archiver_1 = __importDefault(require("archiver"));
 var fs_1 = require("fs");
 var format_bytes_1 = require("../format-bytes");
 var zip = function (project_path) { return __awaiter(void 0, void 0, void 0, function () {
-    var filename, zipPath, output, archive, createZipPromise;
+    var filename, zipPath, promise;
     return __generator(this, function (_a) {
-        filename = 'output.zip';
-        zipPath = (0, path_1.join)(project_path, filename);
-        output = (0, fs_1.createWriteStream)(zipPath);
-        archive = (0, archiver_1["default"])('zip', {
-            zlib: { level: 9 }
-        });
-        output.on('close', function () {
-            console.log('> Compressed %s into "%s"!', (0, format_bytes_1.formatBytes)(archive.pointer()), filename);
-        });
-        output.on('end', function () {
-            console.log('Data has been drained');
-        });
-        archive.on('error', function (err) {
-            throw err;
-        });
-        archive.pipe(output);
-        archive.glob('**/*', {
-            ignore: [
-                '**/node_modules/**'
-            ]
-        });
-        archive.finalize();
-        createZipPromise = new Promise(function (resolve, reject) {
-            output.on('close', resolve);
-            output.on('error', reject);
-        });
-        return [2, { createZipPromise: createZipPromise, zipPath: zipPath }];
+        switch (_a.label) {
+            case 0:
+                filename = 'output.zip';
+                zipPath = (0, path_1.join)(project_path, filename);
+                promise = new Promise(function (resolve, reject) {
+                    var output = (0, fs_1.createWriteStream)(zipPath);
+                    var archive = (0, archiver_1["default"])('zip', {
+                        zlib: { level: 9 }
+                    });
+                    output.on('close', function () {
+                        process.stdout.clearLine(0);
+                        process.stdout.cursorTo(0);
+                        process.stdout.write("> Compressed ".concat((0, format_bytes_1.formatBytes)(archive.pointer()), " into \"").concat(filename, "\"!"));
+                        console.log();
+                        resolve(zipPath);
+                    });
+                    archive.on('progress', function (progress) {
+                        process.stdout.clearLine(0);
+                        process.stdout.cursorTo(0);
+                        process.stdout.write("> In progress: processed ".concat(progress.entries.processed, " files & ").concat((0, format_bytes_1.formatBytes)(progress.fs.processedBytes), " of data"));
+                    });
+                    archive.on('warning', function (err) {
+                        console.log('> Warning:', err);
+                        if (err.code === 'ENOENT') {
+                        }
+                        else {
+                            throw err;
+                        }
+                    });
+                    output.on('end', function () {
+                        console.log('Data has been drained');
+                    });
+                    archive.on('error', function (err) {
+                        reject(err);
+                    });
+                    archive.pipe(output);
+                    archive.glob('**', {
+                        ignore: [
+                            '**/storage/**/data/**',
+                            '**/databases/**/db/**',
+                            'node_modules/*',
+                            '**/node_modules/**',
+                            '**/.DS_Store',
+                            '.git/**',
+                            '*.zip'
+                        ],
+                        cwd: project_path,
+                        dot: true
+                    });
+                    archive.finalize();
+                });
+                return [4, Promise.all([promise])];
+            case 1:
+                _a.sent();
+                return [2, { zipPath: zipPath }];
+        }
     });
 }); };
 exports.zip = zip;

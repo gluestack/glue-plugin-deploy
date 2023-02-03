@@ -1,15 +1,16 @@
 const inquirer = require('inquirer');
 import { GlueStackPlugin } from 'src';
-import { signInUser } from '../apis/handlers/gql';
+import { SEAL_DOMAIN } from '../../config';
+import { Glue } from '@gluestack/glue-server-sdk-js';
 
-export const auth = async (glueStackPlugin: GlueStackPlugin) => {
+export const auth = async (doAuth: boolean, glueStackPlugin: GlueStackPlugin) => {
   const creds = {
     email: glueStackPlugin.gluePluginStore.get('email'),
     password: glueStackPlugin.gluePluginStore.get('password')
   };
 
   // prompts to collect credentials from users
-  if (!creds.email || !creds.password) {
+  if (doAuth || !creds.email || !creds.password) {
     const results = await inquirer.prompt([{
       name: 'email',
       message: 'Please enter your email',
@@ -28,15 +29,15 @@ export const auth = async (glueStackPlugin: GlueStackPlugin) => {
     glueStackPlugin.gluePluginStore.set('password', results.password);
   }
 
-  // signin with stored credentials
-  const response = await signInUser(creds);
-  if (!response || !response.signInUser || !response.signInUser.data) {
-    console.log('Authentication failed. Please check your credentials and try again.');
-    process.exit(1);
+  const glue = new Glue(SEAL_DOMAIN);
+  const response = await glue.auth.login({...creds, role: "owner"});
+  if (!response || !response.id) {
+    console.log(`> Authentication failed. Message: ${response}`);
+    process.exit(-1);
   }
 
   // store user data in the store
-  glueStackPlugin.gluePluginStore.set('team', response.signInUser.data.team);
-  delete response.signInUser.data.team;
-  glueStackPlugin.gluePluginStore.set('user', response.signInUser.data);
+  glueStackPlugin.gluePluginStore.set('team', response.team);
+  delete response.team;
+  glueStackPlugin.gluePluginStore.set('user', response);
 };

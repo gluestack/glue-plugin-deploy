@@ -1,6 +1,6 @@
 {
   "name": "@gluestack/glue-plugin-deploy",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Create an Application using GlueStack framework",
   "repository": {
     "type": "git",
@@ -10,14 +10,15 @@
     "npm",
     "create-gluestack-app"
   ],
-  "author": "Shivam Singhal",
   "license": "ISC",
   "dependencies": {
-    "@gluestack/framework": "^0.0.14",
+    "@gluestack/framework": "^0.0.x",
+    "@gluestack/glue-server-sdk-js": "^0.0.5",
     "@types/node": "^18.11.17",
     "archiver": "^5.3.1",
     "axios": "^1.2.1",
     "cross-fetch": "^3.1.5",
+    "dir-archiver": "^2.1.0",
     "form-data": "^4.0.0",
     "graphql": "^16.6.0",
     "graphql-request": "^5.1.0",
@@ -43,6 +44,6 @@
     "typescript": "^4.9.4"
   },
   "peerDependencies": {
-    "@gluestack/framework": "^0.0.14"
+    "@gluestack/framework": "^0.0.x"
   }
 }

@@ -41,41 +41,19 @@ export default class DeployClass {
     this.plugins = plugins;
   }
 
-  // Verifies that each plugin has a Dockerfile
-  async verifyPlugin(
-    plugin: IPluginObject,
-    filename: string = 'Dockerfile'
-  ) {
-    const cwd = this.cwd;
-    const pluginPath = join(cwd, plugin.directory);
-
-    try {
-      await access(join(pluginPath, filename), constants.R_OK);
-      return true;
-    } catch (e) {
-      console.error(
-        '> Plugin "%s" does not have a "%s" file. ' +
-        'Please run glue build and try again!',
-        plugin.directory,
-        filename
-      );
-      process.exit(1);
-    }
-  }
-
   // Create project zip file ignoring unnecessary files
   async createZip() {
     const cwd = this.cwd;
-    const { createZipPromise, zipPath } = await zip(cwd);
+    const { zipPath } = await zip(cwd);
 
     this.zipPath = zipPath;
-    return createZipPromise;
+    return Promise.resolve(zipPath);
   }
 
   // Authenticates users credentials and
   // stores the details into the project's store
-  async auth() {
-    await auth(this.glueStackPlugin);
+  async auth(doAuth: boolean) {
+    await auth(doAuth, this.glueStackPlugin);
   }
 
   // uploads the zip into minio

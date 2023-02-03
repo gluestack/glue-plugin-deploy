@@ -1,7 +1,7 @@
 import DeployClass from './deploy';
 import { GlueStackPlugin } from 'src';
 
-export const deployAction = async (glueStackPlugin: GlueStackPlugin) => {
+export const deployAction = async (options: any, glueStackPlugin: GlueStackPlugin) => {
   console.log('\n> Note: Please remove any zip file or unnecessary files/folders from your project before deploying!');
   console.log('\n> Deploying project...');
 
@@ -12,25 +12,20 @@ export const deployAction = async (glueStackPlugin: GlueStackPlugin) => {
   // Gathers the "stateless" plugins from the filesystem
   await deploy.statelessPlugins();
 
-  console.log('> Found %d plugins...', deploy.plugins.length);
+  // Showcase the plugins that are going to be deployed
+  console.log('> Found %d deployable plugins...\n', deploy.plugins.length);
   if (!deploy.plugins.length) {
     console.log('> No plugins found! Please run glue build and try again!');
     process.exit(1);
   }
 
-  console.log('> Verifying plugins & compressing the project...');
-
-  // Verifies that each plugin has a Dockerfile
-  for await (const plugin of deploy.plugins) {
-    await deploy.verifyPlugin(plugin, 'Dockerfile');
-  }
-
   // Create project's zip file
+  console.log('> Compressing the project...');
   await deploy.createZip();
 
   // authenticate the user & store creds in local store
   console.log('\n> Authenticating user credentials...');
-  await deploy.auth();
+  await deploy.auth(options.auth);
   console.log('> Authentication successful!\n');
 
   // uploads the project zip file to minio

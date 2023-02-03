@@ -1,4 +1,8 @@
 "use strict";
+var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cooked, raw) {
+    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
+    return cooked;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,46 +39,23 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 exports.__esModule = true;
-exports.deployAction = void 0;
-var deploy_1 = __importDefault(require("./deploy"));
-var deployAction = function (options, glueStackPlugin) { return __awaiter(void 0, void 0, void 0, function () {
-    var deploy;
+exports.createDeployment = void 0;
+var client_1 = require("../../client");
+var createDeployment = function (projectHash, teamID, token, fileID) { return __awaiter(void 0, void 0, void 0, function () {
+    var query, variables, requestHeaders;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                console.log('\n> Note: Please remove any zip file or unnecessary files/folders from your project before deploying!');
-                console.log('\n> Deploying project...');
-                deploy = new deploy_1["default"](glueStackPlugin);
-                console.log('\n> Gathering all deployable plugins...');
-                return [4, deploy.statelessPlugins()];
-            case 1:
-                _a.sent();
-                console.log('> Found %d deployable plugins...\n', deploy.plugins.length);
-                if (!deploy.plugins.length) {
-                    console.log('> No plugins found! Please run glue build and try again!');
-                    process.exit(1);
-                }
-                console.log('> Compressing the project...');
-                return [4, deploy.createZip()];
-            case 2:
-                _a.sent();
-                console.log('\n> Authenticating user credentials...');
-                return [4, deploy.auth(options.auth)];
-            case 3:
-                _a.sent();
-                console.log('> Authentication successful!\n');
-                console.log('> Uploading project zip file...');
-                return [4, deploy.upload()];
-            case 4:
-                _a.sent();
-                console.log('> Project zip file uploaded successfully!\n');
-                return [2];
-        }
+        query = (0, client_1.gql)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    mutation ($projectHash: String!, $teamID: Int!, $token: String!, $fileID: Int!) {\n      createdbdeployment(input: {\n        project_hash: $projectHash,\n        team_id : $teamID,\n        access_token: $token\n        file_id: $fileID\n      }) {\n        success\n        data {\n          deployment_id\n          project_hash\n        }\n        message\n      }\n    }\n  "], ["\n    mutation ($projectHash: String!, $teamID: Int!, $token: String!, $fileID: Int!) {\n      createdbdeployment(input: {\n        project_hash: $projectHash,\n        team_id : $teamID,\n        access_token: $token\n        file_id: $fileID\n      }) {\n        success\n        data {\n          deployment_id\n          project_hash\n        }\n        message\n      }\n    }\n  "])));
+        variables = {
+            projectHash: projectHash,
+            teamID: teamID,
+            token: token,
+            fileID: fileID
+        };
+        requestHeaders = {};
+        return [2, client_1.clientGQL.request(query, variables, requestHeaders)];
     });
 }); };
-exports.deployAction = deployAction;
-//# sourceMappingURL=index.js.map
+exports.createDeployment = createDeployment;
+var templateObject_1;
+//# sourceMappingURL=create-deployment.js.map

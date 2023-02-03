@@ -37,25 +37,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 exports.download = void 0;
-var rest_1 = require("../apis/handlers/rest");
 var download = function (glueStackPlugin) { return __awaiter(void 0, void 0, void 0, function () {
-    var file_id, team, response;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                file_id = glueStackPlugin.gluePluginStore.get('file_id');
-                team = glueStackPlugin.gluePluginStore.get('team');
-                return [4, (0, rest_1.downloadZip)(file_id, team.token)];
-            case 1:
-                response = _a.sent();
-                if (!response || !response.data || !response.data.data || !response.data.data.file_url) {
-                    console.error('Error downloading file');
-                    process.exit(1);
-                }
-                glueStackPlugin.gluePluginStore.set('file_url', response.data.data.file_url);
-                glueStackPlugin.gluePluginStore.set('env', response.data.data.env);
-                return [2];
-        }
+        return [2];
     });
 }); };
 exports.download = download;
