@@ -16,7 +16,13 @@ export const upload = async (
   // prompts to collect Project ID from user
   if (!projectHash || projectHash === 'new') {
     const team = glueStackPlugin.gluePluginStore.get('team');
-    const tmp = await projects(team.id, team.token);
+    let tmp;
+    try {
+      tmp = await projects(team.id, team.token);
+    } catch (err) {
+      console.log('> Error fetching projects... Please try again later.');
+      process.exit(-1);
+    }
 
     // transform key-value pairs
     const choices: any = [{name: 'Create a new Project', value: 'new'}];

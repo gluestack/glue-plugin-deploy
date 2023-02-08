@@ -44,16 +44,27 @@ var glue_server_sdk_js_1 = require("@gluestack/glue-server-sdk-js");
 var create_deployment_1 = require("../apis/handlers/gql/create-deployment");
 var inquirer = require('inquirer');
 var upload = function (filepath, glueStackPlugin) { return __awaiter(void 0, void 0, void 0, function () {
-    var projectHash, team, tmp, choices, results, glue, response, error_1, user, team, fileID, projectHash_1, response, _a, deployment_id, project_hash, error_2;
+    var projectHash, team, tmp, err_1, choices, results, glue, response, error_1, user, team, fileID, projectHash_1, response, _a, deployment_id, project_hash, error_2;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 projectHash = glueStackPlugin.gluePluginStore.get('project_hash');
-                if (!(!projectHash || projectHash === 'new')) return [3, 3];
+                if (!(!projectHash || projectHash === 'new')) return [3, 6];
                 team = glueStackPlugin.gluePluginStore.get('team');
-                return [4, (0, gql_1.projects)(team.id, team.token)];
+                tmp = void 0;
+                _b.label = 1;
             case 1:
+                _b.trys.push([1, 3, , 4]);
+                return [4, (0, gql_1.projects)(team.id, team.token)];
+            case 2:
                 tmp = _b.sent();
+                return [3, 4];
+            case 3:
+                err_1 = _b.sent();
+                console.log('> Error fetching projects... Please try again later.');
+                process.exit(-1);
+                return [3, 4];
+            case 4:
                 choices = [{ name: 'Create a new Project', value: 'new' }];
                 choices.push.apply(choices, tmp.projects.map(function (project) {
                     return { name: project.name, value: project.project_hash };
@@ -64,7 +75,7 @@ var upload = function (filepath, glueStackPlugin) { return __awaiter(void 0, voi
                             type: 'list',
                             choices: choices
                         }])];
-            case 2:
+            case 5:
                 results = _b.sent();
                 if (!results || !results.projectHash) {
                     console.error('> Error collecting project id');
@@ -72,14 +83,14 @@ var upload = function (filepath, glueStackPlugin) { return __awaiter(void 0, voi
                 }
                 projectHash = results.projectHash;
                 glueStackPlugin.gluePluginStore.set('project_hash', results.projectHash);
-                _b.label = 3;
-            case 3:
+                _b.label = 6;
+            case 6:
                 glue = new glue_server_sdk_js_1.Glue(config_1.SEAL_DOMAIN);
-                _b.label = 4;
-            case 4:
-                _b.trys.push([4, 6, , 7]);
+                _b.label = 7;
+            case 7:
+                _b.trys.push([7, 9, , 10]);
                 return [4, glue.storage.upload((0, fs_1.createReadStream)(filepath))];
-            case 5:
+            case 8:
                 response = _b.sent();
                 if (response && !response.id) {
                     console.error('Error uploading the project zip file to minio');
@@ -87,24 +98,24 @@ var upload = function (filepath, glueStackPlugin) { return __awaiter(void 0, voi
                 }
                 glueStackPlugin.gluePluginStore.set('file_id', response.id);
                 console.log('> File uploaded successfully...');
-                return [3, 7];
-            case 6:
+                return [3, 10];
+            case 9:
                 error_1 = _b.sent();
                 console.log('> Uploading failed due to following reason:', error_1.message || error_1);
                 console.log(error_1);
                 process.exit(-1);
-                return [3, 7];
-            case 7:
+                return [3, 10];
+            case 10:
                 console.log('> Submitting the deployment now...');
-                _b.label = 8;
-            case 8:
-                _b.trys.push([8, 10, , 11]);
+                _b.label = 11;
+            case 11:
+                _b.trys.push([11, 13, , 14]);
                 user = glueStackPlugin.gluePluginStore.get('user');
                 team = glueStackPlugin.gluePluginStore.get('team');
                 fileID = glueStackPlugin.gluePluginStore.get('file_id');
                 projectHash_1 = glueStackPlugin.gluePluginStore.get('project_hash');
                 return [4, (0, create_deployment_1.createDeployment)(projectHash_1 === 'new' ? '' : projectHash_1, team.id, user.access_token, fileID)];
-            case 9:
+            case 12:
                 response = _b.sent();
                 if (response && response.createdbdeployment && response.createdbdeployment.data) {
                     _a = response.createdbdeployment.data, deployment_id = _a.deployment_id, project_hash = _a.project_hash;
@@ -112,12 +123,12 @@ var upload = function (filepath, glueStackPlugin) { return __awaiter(void 0, voi
                     glueStackPlugin.gluePluginStore.set('project_hash', project_hash);
                 }
                 console.log('> Deployment submitted successfully...');
-                return [3, 11];
-            case 10:
+                return [3, 14];
+            case 13:
                 error_2 = _b.sent();
                 console.log('> Uploading failed due to following reason:', error_2.response.errors || error_2);
-                return [3, 11];
-            case 11:
+                return [3, 14];
+            case 14:
                 (0, fs_1.unlinkSync)(filepath);
                 return [2];
         }
