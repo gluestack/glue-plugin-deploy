@@ -99,7 +99,10 @@ var zip = function (project_path) { return __awaiter(void 0, void 0, void 0, fun
                             '**/.DS_Store',
                             '.git/**',
                             '**/*.zip',
-                            '.deploy'
+                            '.deploy',
+                            '**/services/auth/dist',
+                            '**/services/storage/dist',
+                            '**/.next/**',
                         ],
                         cwd: project_path,
                         dot: true
