@@ -98,7 +98,8 @@ var zip = function (project_path) { return __awaiter(void 0, void 0, void 0, fun
                             '**/node_modules/**',
                             '**/.DS_Store',
                             '.git/**',
-                            '*.zip'
+                            '**/*.zip',
+                            '.deploy'
                         ],
                         cwd: project_path,
                         dot: true

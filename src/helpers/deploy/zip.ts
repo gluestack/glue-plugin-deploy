@@ -72,7 +72,8 @@ export const zip = async (project_path: string) => {
         '**/node_modules/**',
         '**/.DS_Store',
         '.git/**',
-        '*.zip'
+        '**/*.zip',
+        '.deploy'
       ],
       cwd: project_path,
       dot: true
