@@ -1,9 +1,10 @@
 import { clientGQL, gql } from '../../client';
 
-export const createDeployment = async (projectHash: string, teamID: number, token: string, fileID: number) => {
+export const createDeployment = async (projectName: string, projectHash: string, teamID: number, token: string, fileID: number) => {
   const query = gql`
-    mutation ($projectHash: String!, $teamID: Int!, $token: String!, $fileID: Int!) {
+    mutation ($projectName: String!, $projectHash: String!, $teamID: Int!, $token: String!, $fileID: Int!) {
       createdbdeployment(input: {
+        project_name: $projectName,
         project_hash: $projectHash,
         team_id : $teamID,
         access_token: $token
@@ -20,6 +21,7 @@ export const createDeployment = async (projectHash: string, teamID: number, toke
   `;
 
   const variables = {
+    projectName,
     projectHash,
     teamID,
     token,

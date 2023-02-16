@@ -78,8 +78,10 @@ export const upload = async (
     const team = glueStackPlugin.gluePluginStore.get('team');
     const fileID = glueStackPlugin.gluePluginStore.get('file_id');
     const projectHash = glueStackPlugin.gluePluginStore.get('project_hash');
+    const projectName: string = process.cwd().split('/')[process.cwd().split('/').length - 1];
 
     const response = await createDeployment(
+      projectName,
       projectHash === 'new' ? '' : projectHash,
       team.id,
       user.access_token,

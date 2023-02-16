@@ -42,11 +42,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.createDeployment = void 0;
 var client_1 = require("../../client");
-var createDeployment = function (projectHash, teamID, token, fileID) { return __awaiter(void 0, void 0, void 0, function () {
+var createDeployment = function (projectName, projectHash, teamID, token, fileID) { return __awaiter(void 0, void 0, void 0, function () {
     var query, variables, requestHeaders;
     return __generator(this, function (_a) {
-        query = (0, client_1.gql)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    mutation ($projectHash: String!, $teamID: Int!, $token: String!, $fileID: Int!) {\n      createdbdeployment(input: {\n        project_hash: $projectHash,\n        team_id : $teamID,\n        access_token: $token\n        file_id: $fileID\n      }) {\n        success\n        data {\n          deployment_id\n          project_hash\n        }\n        message\n      }\n    }\n  "], ["\n    mutation ($projectHash: String!, $teamID: Int!, $token: String!, $fileID: Int!) {\n      createdbdeployment(input: {\n        project_hash: $projectHash,\n        team_id : $teamID,\n        access_token: $token\n        file_id: $fileID\n      }) {\n        success\n        data {\n          deployment_id\n          project_hash\n        }\n        message\n      }\n    }\n  "])));
+        query = (0, client_1.gql)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    mutation ($projectName: String!, $projectHash: String!, $teamID: Int!, $token: String!, $fileID: Int!) {\n      createdbdeployment(input: {\n        project_name: $projectName,\n        project_hash: $projectHash,\n        team_id : $teamID,\n        access_token: $token\n        file_id: $fileID\n      }) {\n        success\n        data {\n          deployment_id\n          project_hash\n        }\n        message\n      }\n    }\n  "], ["\n    mutation ($projectName: String!, $projectHash: String!, $teamID: Int!, $token: String!, $fileID: Int!) {\n      createdbdeployment(input: {\n        project_name: $projectName,\n        project_hash: $projectHash,\n        team_id : $teamID,\n        access_token: $token\n        file_id: $fileID\n      }) {\n        success\n        data {\n          deployment_id\n          project_hash\n        }\n        message\n      }\n    }\n  "])));
         variables = {
+            projectName: projectName,
             projectHash: projectHash,
             teamID: teamID,
             token: token,

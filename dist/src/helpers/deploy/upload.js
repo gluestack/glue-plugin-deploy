@@ -44,7 +44,7 @@ var glue_server_sdk_js_1 = require("@gluestack/glue-server-sdk-js");
 var create_deployment_1 = require("../apis/handlers/gql/create-deployment");
 var inquirer = require('inquirer');
 var upload = function (filepath, glueStackPlugin) { return __awaiter(void 0, void 0, void 0, function () {
-    var projectHash, team, tmp, err_1, choices, results, glue, response, error_1, user, team, fileID, projectHash_1, response, _a, deployment_id, project_hash, error_2;
+    var projectHash, team, tmp, err_1, choices, results, glue, response, error_1, user, team, fileID, projectHash_1, projectName, response, _a, deployment_id, project_hash, error_2;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -114,7 +114,8 @@ var upload = function (filepath, glueStackPlugin) { return __awaiter(void 0, voi
                 team = glueStackPlugin.gluePluginStore.get('team');
                 fileID = glueStackPlugin.gluePluginStore.get('file_id');
                 projectHash_1 = glueStackPlugin.gluePluginStore.get('project_hash');
-                return [4, (0, create_deployment_1.createDeployment)(projectHash_1 === 'new' ? '' : projectHash_1, team.id, user.access_token, fileID)];
+                projectName = process.cwd().split('/')[process.cwd().split('/').length - 1];
+                return [4, (0, create_deployment_1.createDeployment)(projectName, projectHash_1 === 'new' ? '' : projectHash_1, team.id, user.access_token, fileID)];
             case 12:
                 response = _b.sent();
                 if (response && response.createdbdeployment && response.createdbdeployment.data) {
