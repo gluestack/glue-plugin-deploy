@@ -35,6 +35,10 @@ export const auth = async (doAuth: boolean, glueStackPlugin: GlueStackPlugin) =>
     console.log(`> Authentication failed. Message: ${response}`);
     process.exit(-1);
   }
+  if (!response.is_verified) {
+    console.log(`> Authentication failed. Message: Account is not verified`);
+    process.exit(-1);
+  }
 
   // store user data in the store
   glueStackPlugin.gluePluginStore.set('team', response.team);

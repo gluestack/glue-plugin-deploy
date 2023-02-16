@@ -86,6 +86,10 @@ var auth = function (doAuth, glueStackPlugin) { return __awaiter(void 0, void 0,
                     console.log("> Authentication failed. Message: ".concat(response));
                     process.exit(-1);
                 }
+                if (!response.is_verified) {
+                    console.log("> Authentication failed. Message: Account is not verified");
+                    process.exit(-1);
+                }
                 glueStackPlugin.gluePluginStore.set('team', response.team);
                 delete response.team;
                 glueStackPlugin.gluePluginStore.set('user', response);
