@@ -8,7 +8,7 @@ import ILifeCycle from "@gluestack/framework/types/plugin/interface/ILifeCycle";
 import IGlueStorePlugin from "@gluestack/framework/types/store/interface/IGluePluginStore";
 import IManagesInstances from "@gluestack/framework/types/plugin/interface/IManagesInstances";
 
-import { deploy as deployCommand } from "./commands";
+import { deploy as deployCommand, deployWatch as deployWatchCommand } from "./commands";
 
 //Do not edit the name of this class
 export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
@@ -25,6 +25,7 @@ export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
 
   init() {
     this.app.addCommand((program: any) => deployCommand(program, this));
+    this.app.addCommand((program: any) => deployWatchCommand(program, this));
   }
 
   destroy() {

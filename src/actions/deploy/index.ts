@@ -1,7 +1,11 @@
-import DeployClass from './deploy';
-import { GlueStackPlugin } from 'src';
+import DeployClass from "./deploy";
+import { GlueStackPlugin } from "src";
 
-export const deployAction = async (options: any, glueStackPlugin: GlueStackPlugin) => {
+export const deployAction = async (
+  options: any,
+  glueStackPlugin: GlueStackPlugin,
+  isWatch: boolean = false,
+) => {
   console.log('\n> Note: Please remove any zip file or unnecessary files/folders from your project before deploying!');
   console.log('\n> Deploying project...');
 
@@ -32,4 +36,9 @@ export const deployAction = async (options: any, glueStackPlugin: GlueStackPlugi
   console.log('> Uploading project zip file...');
   await deploy.upload();
   console.log('> Project zip file uploaded successfully!\n');
+
+  if (isWatch) {
+    console.log("> Fetching deployment details...\n");
+    await deploy.watch();
+  }
 };

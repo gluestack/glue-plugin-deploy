@@ -1,9 +1,8 @@
-
-import { GlueStackPlugin } from 'src';
-import { auth, upload, zip } from '../../helpers/deploy';
-import { IPluginCollection } from 'src/interfaces';
-import IInstance from '@gluestack/framework/types/plugin/interface/IInstance';
-import IHasContainerController from '@gluestack/framework/types/plugin/interface/IHasContainerController';
+import { GlueStackPlugin } from "src";
+import { auth, upload, zip, watch } from "../../helpers/deploy";
+import { IPluginCollection } from "src/interfaces";
+import IInstance from "@gluestack/framework/types/plugin/interface/IInstance";
+import IHasContainerController from "@gluestack/framework/types/plugin/interface/IHasContainerController";
 
 export default class DeployClass {
   glueStackPlugin: GlueStackPlugin;
@@ -26,11 +25,11 @@ export default class DeployClass {
           instance &&
           instance?.containerController &&
           instance?.callerPlugin &&
-          instance.getCallerPlugin().getType() === 'stateless'
+          instance.getCallerPlugin().getType() === "stateless"
         ) {
           plugins.push({
             name: instance.getCallerPlugin().getName(),
-            directory: instance.getInstallationPath()
+            directory: instance.getInstallationPath(),
           });
         }
       });
@@ -55,5 +54,9 @@ export default class DeployClass {
   // uploads the zip into minio
   async upload() {
     await upload(this.zipPath, this.glueStackPlugin);
+  }
+  // uploads the zip into minio
+  async watch() {
+    await watch(this.glueStackPlugin);
   }
 }

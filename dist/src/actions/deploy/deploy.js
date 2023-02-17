@@ -54,7 +54,7 @@ var DeployClass = (function () {
                     if (instance &&
                         (instance === null || instance === void 0 ? void 0 : instance.containerController) &&
                         (instance === null || instance === void 0 ? void 0 : instance.callerPlugin) &&
-                        instance.getCallerPlugin().getType() === 'stateless') {
+                        instance.getCallerPlugin().getType() === "stateless") {
                         plugins.push({
                             name: instance.getCallerPlugin().getName(),
                             directory: instance.getInstallationPath()
@@ -99,6 +99,18 @@ var DeployClass = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, (0, deploy_1.upload)(this.zipPath, this.glueStackPlugin)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    DeployClass.prototype.watch = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, (0, deploy_1.watch)(this.glueStackPlugin)];
                     case 1:
                         _a.sent();
                         return [2];

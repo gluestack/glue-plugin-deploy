@@ -17,4 +17,5 @@ exports.__esModule = true;
 __exportStar(require("./auth"), exports);
 __exportStar(require("./upload"), exports);
 __exportStar(require("./zip"), exports);
+__exportStar(require("./watch"), exports);
 //# sourceMappingURL=index.js.map

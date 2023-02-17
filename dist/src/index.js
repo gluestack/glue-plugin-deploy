@@ -53,6 +53,7 @@ var GlueStackPlugin = (function () {
     GlueStackPlugin.prototype.init = function () {
         var _this = this;
         this.app.addCommand(function (program) { return (0, commands_1.deploy)(program, _this); });
+        this.app.addCommand(function (program) { return (0, commands_1.deployWatch)(program, _this); });
     };
     GlueStackPlugin.prototype.destroy = function () {
     };
