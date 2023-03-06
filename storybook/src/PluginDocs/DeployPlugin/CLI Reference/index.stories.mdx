@@ -1,0 +1,38 @@
+---
+title: Getting started | Deploy
+description: Getting started | Deploy
+---
+
+import { Canvas, Meta, Story } from "@storybook/addon-docs";
+
+<Meta title="Deploy Plugin/CLI Reference" />
+
+# CLI Reference
+
+## Service-Node
+
+  * This command will compress your application and initialize the deployment.
+
+    <br/>
+
+    ```bash
+    $ node glue deploy
+    ```
+
+    <br/>
+
+    It's important to ensure that your application is properly configured and tested before running the deployment command, to avoid any issues or errors during the deployment process.
+    
+    <br/> 
+    
+  * The **deploy:watch** command is a variant of the deployment command that allows you to monitor the deployment process in real-time. When you run this command, it will compress your application and initiate the deployment process as usual, but it will also start a watch mode that allows you to view the deployment logs as they are generated.
+
+    <br/>
+
+    ```bash
+    $ node glue deploy:watch
+    ```
+
+    <br/>
+
+    The watch mode can be helpful for identifying and resolving issues during the deployment process, as it provides real-time feedback on the progress of the deployment and any errors or warnings that may occur.
